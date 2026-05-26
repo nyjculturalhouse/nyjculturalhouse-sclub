@@ -250,3 +250,20 @@ function submitAttendance() {
 
     sendPost('submitAttendance');
 }
+
+function showStep(s) {
+
+    curStep = s;
+
+    document
+        .getElementById('step-days')
+        ?.classList.toggle('hidden', s !== 1);
+
+    document
+        .getElementById('step-clubs')
+        ?.classList.toggle('hidden', s !== 2);
+
+    document
+        .getElementById('step-members')
+        ?.classList.toggle('hidden', s !== 3);
+}
