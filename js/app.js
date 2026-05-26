@@ -7,10 +7,15 @@ function adminAuth() {
 
     const pw = prompt("관리자 비밀번호를 입력하세요.");
 
-    if(pw === "0226") {
-        showView('admin');
-    } else if(pw !== null) {
+    if (pw === "0226") {
+
+        loadStats();
+
+    } else if (pw !== null) {
+
         alert("비밀번호가 올바르지 않습니다.");
+
+        location.href = "index.html";
     }
 }
 
