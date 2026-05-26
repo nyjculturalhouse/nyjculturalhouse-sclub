@@ -3,9 +3,6 @@ let selDay = '';
 let selClub = '';
 let selMembers = [];
 
-// 추가: preload 데이터 저장
-let ALL_CLUB_DATA = [];
-
 function adminAuth() {
 
     const pw = prompt("관리자 비밀번호를 입력하세요.");
@@ -83,25 +80,9 @@ async function loadStats() {
     }
 }
 
-// 추가: 첫 진입 preload
-async function preloadClubData() {
-
-    try {
-
-        ALL_CLUB_DATA = await apiGet("getAllClubData");
-
-    } catch(e) {
-
-        console.log(e);
-    }
-}
-
 function initDays() {
 
     showStep(1);
-
-    // preload 실행
-    preloadClubData();
 
     const days = ['화','수','목','금','토','일'];
 
@@ -119,17 +100,12 @@ function initDays() {
 
         b.onclick = () => {
 
-            // 추가: 진동 피드백
-            if(navigator.vibrate) {
-                navigator.vibrate(30);
-            }
-
             b.classList.add('selected');
 
-            selDay = d;
-
-            // 속도 개선
-            loadClubs(d);
+            setTimeout(() => {
+                selDay = d;
+                loadClubs(d);
+            }, 300);
         };
 
         box.appendChild(b);
@@ -142,27 +118,17 @@ async function loadClubs(day) {
 
     const box = document.getElementById('club-buttons');
 
+    box.innerHTML = `
+        <p style="text-align:center;">
+            불러오는 중...
+        </p>
+    `;
+
+    const clubs = await apiGet("getClubs", {
+        day: day
+    });
+
     box.innerHTML = '';
-
-    // 수정: preload 완료 전 fallback 처리
-    let clubs = [];
-
-    if(ALL_CLUB_DATA.length > 0) {
-
-        clubs = [
-            ...new Set(
-                ALL_CLUB_DATA
-                    .filter(c => String(c.day).trim() === day)
-                    .map(c => c.club)
-            )
-        ];
-
-    } else {
-
-        clubs = await apiGet("getClubs", {
-            day: day
-        });
-    }
 
     clubs.forEach(c => {
 
@@ -174,17 +140,12 @@ async function loadClubs(day) {
 
         b.onclick = () => {
 
-            // 추가: 진동 피드백
-            if(navigator.vibrate) {
-                navigator.vibrate(30);
-            }
-
             b.classList.add('selected');
 
-            selClub = c;
-
-            // 속도 개선
-            loadMembers(c);
+            setTimeout(() => {
+                selClub = c;
+                loadMembers(c);
+            }, 300);
         };
 
         box.appendChild(b);
@@ -203,23 +164,9 @@ async function loadMembers(club) {
 
     selMembers = [];
 
-    // 수정: preload 완료 전 fallback 처리
-    let members = [];
-
-    if(ALL_CLUB_DATA.length > 0) {
-
-        const found = ALL_CLUB_DATA.find(
-            c => String(c.club).trim() === club
-        );
-
-        members = found ? found.members : [];
-
-    } else {
-
-        members = await apiGet("getMembers", {
-            club: club
-        });
-    }
+    const members = await apiGet("getMembers", {
+        club: club
+    });
 
     members.forEach(m => {
 
@@ -230,11 +177,6 @@ async function loadMembers(club) {
         b.innerText = m;
 
         b.onclick = () => {
-
-            // 추가: 진동 피드백
-            if(navigator.vibrate) {
-                navigator.vibrate(20);
-            }
 
             b.classList.toggle('selected');
 
@@ -266,27 +208,25 @@ async function sendPost(mode) {
     } else if(mode === 'submitBooking') {
 
         data.name = document.getElementById('b_name').value;
-
         let phone = document.getElementById('b_phone').value
-            .replace(/[^0-9]/g, '');
+    .replace(/[^0-9]/g, '');
 
-        if(phone.length === 11) {
+if(phone.length === 11) {
 
-            phone =
-                phone.slice(0, 3) + '-' +
-                phone.slice(3, 7) + '-' +
-                phone.slice(7);
+    phone =
+        phone.slice(0, 3) + '-' +
+        phone.slice(3, 7) + '-' +
+        phone.slice(7);
 
-        } else if(phone.length === 10) {
+} else if(phone.length === 10) {
 
-            phone =
-                phone.slice(0, 3) + '-' +
-                phone.slice(3, 6) + '-' +
-                phone.slice(6);
-        }
+    phone =
+        phone.slice(0, 3) + '-' +
+        phone.slice(3, 6) + '-' +
+        phone.slice(6);
+}
 
-        data.phone = phone;
-
+data.phone = phone;
         data.space = document.getElementById('b_space').value;
         data.content = document.getElementById('b_content').value;
         data.dateTime = document.getElementById('b_date').value;
@@ -299,27 +239,7 @@ async function sendPost(mode) {
     } else if(mode === 'submitExternal') {
 
         data.club = document.getElementById('e_club').value;
-
-        let phone = document.getElementById('e_phone').value
-            .replace(/[^0-9]/g, '');
-
-        if(phone.length === 11) {
-
-            phone =
-                phone.slice(0, 3) + '-' +
-                phone.slice(3, 7) + '-' +
-                phone.slice(7);
-
-        } else if(phone.length === 10) {
-
-            phone =
-                phone.slice(0, 3) + '-' +
-                phone.slice(3, 6) + '-' +
-                phone.slice(6);
-        }
-
-        data.phone = phone;
-
+        data.phone = document.getElementById('e_phone').value;
         data.event = document.getElementById('e_event').value;
         data.content = document.getElementById('e_content').value;
         data.dateTime = document.getElementById('e_date').value;
@@ -334,11 +254,6 @@ async function sendPost(mode) {
     submitBtns.forEach(btn => {
         btn.disabled = true;
     });
-
-    // 추가: 진동 피드백
-    if(navigator.vibrate) {
-        navigator.vibrate([50, 30, 50]);
-    }
 
     await apiPost(data);
 
@@ -371,56 +286,4 @@ function showStep(s) {
         ?.classList.toggle('hidden', s !== 3);
 }
 
-// 추가: 전화번호 자동 하이픈
-document.addEventListener('DOMContentLoaded', () => {
-
-    const phones = [
-        document.getElementById('b_phone'),
-        document.getElementById('e_phone')
-    ];
-
-    phones.forEach(input => {
-
-        if(!input) return;
-
-        input.addEventListener('input', e => {
-
-            let num = e.target.value.replace(/[^0-9]/g, '');
-
-            if(num.length > 11) {
-                num = num.slice(0, 11);
-            }
-
-            if(num.length < 4) {
-
-                e.target.value = num;
-
-            } else if(num.length < 8) {
-
-                e.target.value =
-                    num.slice(0, 3) + '-' +
-                    num.slice(3);
-
-            } else {
-
-                e.target.value =
-                    num.slice(0, 3) + '-' +
-                    num.slice(3, 7) + '-' +
-                    num.slice(7);
-            }
-        });
-    });
-
-    // 추가: 날짜 UX 개선
-    const dates = [
-        document.getElementById('b_date'),
-        document.getElementById('e_date')
-    ];
-
-    dates.forEach(input => {
-
-        if(!input) return;
-
-        input.min = new Date().toISOString().slice(0,16);
-    });
-});
+수정필요부분 수정해주고 내가 말하지 않은부분은 수정,첨삭,삭제 금지
