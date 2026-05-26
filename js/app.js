@@ -144,14 +144,25 @@ async function loadClubs(day) {
 
     box.innerHTML = '';
 
-    // preload 데이터 사용
-    const clubs = [
-        ...new Set(
-            ALL_CLUB_DATA
-                .filter(c => c.day === day)
-                .map(c => c.club)
-        )
-    ];
+    // 수정: preload 완료 전 fallback 처리
+    let clubs = [];
+
+    if(ALL_CLUB_DATA.length > 0) {
+
+        clubs = [
+            ...new Set(
+                ALL_CLUB_DATA
+                    .filter(c => String(c.day).trim() === day)
+                    .map(c => c.club)
+            )
+        ];
+
+    } else {
+
+        clubs = await apiGet("getClubs", {
+            day: day
+        });
+    }
 
     clubs.forEach(c => {
 
@@ -192,10 +203,23 @@ async function loadMembers(club) {
 
     selMembers = [];
 
-    // preload 데이터 사용
-    const found = ALL_CLUB_DATA.find(c => c.club === club);
+    // 수정: preload 완료 전 fallback 처리
+    let members = [];
 
-    const members = found ? found.members : [];
+    if(ALL_CLUB_DATA.length > 0) {
+
+        const found = ALL_CLUB_DATA.find(
+            c => String(c.club).trim() === club
+        );
+
+        members = found ? found.members : [];
+
+    } else {
+
+        members = await apiGet("getMembers", {
+            club: club
+        });
+    }
 
     members.forEach(m => {
 
