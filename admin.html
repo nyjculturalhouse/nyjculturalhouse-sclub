@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>관리자 페이지</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="container">
+
+    <div id="view-admin" class="card">
+
+        <h3>주간 통합 출석 현황</h3>
+
+        <p
+            style="text-align:center; color:#666; font-size:16px; margin-bottom:15px;"
+        >
+            매주 전체 출석 인원 합계입니다.
+        </p>
+
+        <div id="admin-content"></div>
+
+        <button
+            class="btn secondary"
+            onclick="location.href='index.html'"
+            style="margin-top:30px;"
+        >
+            메인 화면으로
+        </button>
+
+    </div>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+    adminAuth();
+    loadStats();
+</script>
+
+</body>
+</html>
