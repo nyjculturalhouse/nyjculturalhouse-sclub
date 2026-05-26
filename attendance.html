@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+    <title>동아리 출석체크</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="overlay"></div>
+<div id="toast">제출 완료 ✅</div>
+
+<div class="container">
+
+    <div id="view-attendance" class="card">
+
+        <div id="step-days">
+            <h3>요일을 골라주세요</h3>
+            <div id="day-buttons"></div>
+        </div>
+
+        <div id="step-clubs" class="hidden">
+            <h3>동아리를 골라주세요</h3>
+            <div id="club-buttons"></div>
+        </div>
+
+        <div id="step-members" class="hidden">
+            <h3 id="club-title" style="color:#3182f6;"></h3>
+
+            <p style="text-align:center; margin:0 0 10px 0; color:#666;">
+                출석한 분들을 눌러주세요
+            </p>
+
+            <div id="member-list"></div>
+
+            <button
+                class="btn primary"
+                id="btn-submit-att"
+                onclick="submitAttendance()"
+                style="margin-top:30px; font-size:24px;"
+            >
+                출석 제출하기
+            </button>
+        </div>
+
+        <button class="btn secondary" onclick="location.href='index.html'">
+            메인으로
+        </button>
+
+    </div>
+
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/ui.js"></script>
+<script src="js/app.js"></script>
+
+<script>
+    initDays();
+</script>
+
+</body>
+</html>
