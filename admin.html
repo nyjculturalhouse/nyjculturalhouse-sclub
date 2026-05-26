@@ -14,15 +14,71 @@
 
     <div id="view-admin" class="card">
 
-        <h3>주간 통합 출석 현황</h3>
+        <h3>관리자 페이지</h3>
 
-        <p
-            style="text-align:center; color:#666; font-size:16px; margin-bottom:15px;"
+        <div
+            style="
+                display:grid;
+                grid-template-columns:1fr 1fr;
+                gap:12px;
+                margin-top:20px;
+            "
         >
-            매주 전체 출석 인원 합계입니다.
-        </p>
 
-        <div id="admin-content"></div>
+            <button
+                class="btn primary"
+                onclick="showAdminTab('stats')"
+                style="margin-top:0;"
+            >
+                동아리 주간 출석 현황
+            </button>
+
+            <button
+                class="btn primary"
+                onclick="showAdminTab('calendar')"
+                style="margin-top:0;"
+            >
+                대관 캘린더
+            </button>
+
+        </div>
+
+        <!-- 출석 현황 -->
+        <div id="admin-stats-section" style="margin-top:25px;">
+
+            <p
+                style="
+                    text-align:center;
+                    color:#666;
+                    font-size:16px;
+                    margin-bottom:15px;
+                "
+            >
+                매주 전체 출석 인원 합계입니다.
+            </p>
+
+            <div id="admin-content"></div>
+
+        </div>
+
+        <!-- 대관 캘린더 -->
+        <div
+            id="admin-calendar-section"
+            class="hidden"
+            style="margin-top:25px;"
+        >
+
+            <div class="calendar-container">
+
+                <iframe
+                    src="https://calendar.google.com/calendar/embed?src=29f49ca08ab45c6d905555a73977703f275fd464e254ed959725c9046b3a6436%40group.calendar.google.com&ctz=Asia%2FSeoul"
+                    frameborder="0"
+                    scrolling="no"
+                ></iframe>
+
+            </div>
+
+        </div>
 
         <button
             class="btn secondary"
@@ -41,8 +97,38 @@
 <script src="js/app.js"></script>
 
 <script>
+
     adminAuth();
-    loadStats();
+
+    function showAdminTab(tab) {
+
+        document
+            .getElementById('admin-stats-section')
+            .classList.add('hidden');
+
+        document
+            .getElementById('admin-calendar-section')
+            .classList.add('hidden');
+
+        if(tab === 'stats') {
+
+            document
+                .getElementById('admin-stats-section')
+                .classList.remove('hidden');
+
+            loadStats();
+        }
+
+        if(tab === 'calendar') {
+
+            document
+                .getElementById('admin-calendar-section')
+                .classList.remove('hidden');
+        }
+    }
+
+    showAdminTab('stats');
+
 </script>
 
 </body>
