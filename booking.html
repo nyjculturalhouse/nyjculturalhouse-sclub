@@ -477,18 +477,59 @@
 
     const originalSendPost = sendPost;
 
+    // 🔥 수정
     sendPost = async function(mode) {
 
         if(mode === 'submitBooking') {
 
-            const agree1 = document.getElementById('agree1_yes').checked;
-
-            const agree2 = document.getElementById('agree2_yes').checked;
+            const agree1 = document.querySelector('input[name="agree1"]:checked');
+            const agree2 = document.querySelector('input[name="agree2"]:checked');
 
             if(!agree1 || !agree2) {
 
-                return alert("모든 동의 항목에 동의해주세요.");
+                return alert("모든 동의 항목에 체크해주세요.");
             }
+
+            const payload = {
+
+                mode: 'submitBooking',
+
+                name: document.getElementById('b_name').value,
+                phone: document.getElementById('b_phone').value,
+                org: document.getElementById('b_org').value,
+                space: document.getElementById('b_space').value,
+                content: document.getElementById('b_content').value,
+                dateTime: document.getElementById('b_date').value,
+                hours: document.getElementById('b_hours').value,
+                people: document.getElementById('b_people').value,
+
+                // 🔥 추가
+                agree1: agree1.value,
+                agree2: agree2.value
+            };
+
+            try {
+
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await res.json();
+
+                if(result.error) {
+
+                    return alert(result.error);
+                }
+
+                showToast("제출 완료 ✅");
+
+            } catch(err) {
+
+                alert("전송 실패");
+            }
+
+            return;
         }
 
         originalSendPost(mode);
