@@ -17,291 +17,439 @@
 
     <div id="view-booking" class="card">
 
-        <h3>대관 신청서</h3>
+        <h3>대관 신청</h3>
 
-        <label>신청자 정보</label>
-
-        <input id="b_name" placeholder="신청자 이름">
-
-        <input
-            id="b_phone"
-            placeholder="전화번호"
-            inputmode="numeric"
-            maxlength="13"
-            oninput="
-                let v = this.value.replace(/[^0-9]/g, '');
-
-                if(v.length > 11) {
-                    v = v.slice(0, 11);
-                }
-
-                if(v.length >= 11) {
-
-                    this.value =
-                        v.slice(0,3) + '-' +
-                        v.slice(3,7) + '-' +
-                        v.slice(7);
-
-                } else if(v.length >= 7) {
-
-                    this.value =
-                        v.slice(0,3) + '-' +
-                        v.slice(3,6) + '-' +
-                        v.slice(6);
-
-                } else if(v.length >= 4) {
-
-                    this.value =
-                        v.slice(0,3) + '-' +
-                        v.slice(3);
-
-                } else {
-
-                    this.value = v;
-                }
-            "
-        >
-
-        <input id="b_org" placeholder="소속 동아리 / 단체명">
-
-        <label>공간 선택</label>
-
-        <select id="b_space">
-            <option value="어울림방">어울림방</option>
-            <option value="댄스실">댄스실</option>
-            <option value="음악실">음악실</option>
-            <option value="동아리방">동아리방</option>
-        </select>
-
-        <label>사용 목적</label>
-
-        <input id="b_content" placeholder="예) 연습, 회의, 공연 준비 등">
-
-        <label>이용 일시</label>
-
-        <input
-            id="b_date"
-            type="datetime-local"
-            min=""
-        >
-
-        <label>사용 시간</label>
-
-        <select id="b_hours">
-            <option value="1">1시간</option>
-            <option value="2">2시간</option>
-        </select>
-
-        <label>예상 인원</label>
-
-        <input id="b_people" type="number" placeholder="예상 참여 인원">
-
-        <!-- 동의문 -->
+        <!-- 🔥 추가 : 상단 메뉴 -->
         <div
             style="
-                margin-top:30px;
-                padding:20px;
-                border:2px solid #e5e8eb;
-                border-radius:16px;
-                background:#f9fafb;
-                line-height:1.8;
-                color:#333;
-                font-size:16px;
+                display:grid;
+                grid-template-columns:1fr 1fr 1fr;
+                gap:12px;
+                margin-top:20px;
+                margin-bottom:25px;
             "
+        >
+
+            <button
+                class="btn primary"
+                onclick="showBookingTab('form')"
+                style="margin-top:0;"
+            >
+                대관 신청서
+            </button>
+
+            <button
+                class="btn primary"
+                onclick="showBookingTab('schedule')"
+                style="margin-top:0;"
+            >
+                공간 시간표
+            </button>
+
+            <button
+                class="btn primary"
+                onclick="showBookingTab('calendar')"
+                style="margin-top:0;"
+            >
+                대관 캘린더
+            </button>
+
+        </div>
+
+        <!-- 🔥 대관 신청서 -->
+        <div id="booking-form-section">
+
+            <h3>대관 신청서</h3>
+
+            <label>신청자 정보</label>
+
+            <input id="b_name" placeholder="신청자 이름">
+
+            <input
+                id="b_phone"
+                placeholder="전화번호"
+                inputmode="numeric"
+                maxlength="13"
+                oninput="
+                    let v = this.value.replace(/[^0-9]/g, '');
+
+                    if(v.length > 11) {
+                        v = v.slice(0, 11);
+                    }
+
+                    if(v.length >= 11) {
+
+                        this.value =
+                            v.slice(0,3) + '-' +
+                            v.slice(3,7) + '-' +
+                            v.slice(7);
+
+                    } else if(v.length >= 7) {
+
+                        this.value =
+                            v.slice(0,3) + '-' +
+                            v.slice(3,6) + '-' +
+                            v.slice(6);
+
+                    } else if(v.length >= 4) {
+
+                        this.value =
+                            v.slice(0,3) + '-' +
+                            v.slice(3);
+
+                    } else {
+
+                        this.value = v;
+                    }
+                "
+            >
+
+            <input id="b_org" placeholder="소속 동아리 / 단체명">
+
+            <label>공간 선택</label>
+
+            <select id="b_space">
+                <option value="어울림방">어울림방</option>
+                <option value="댄스실">댄스실</option>
+                <option value="음악실">음악실</option>
+                <option value="동아리방">동아리방</option>
+            </select>
+
+            <label>사용 목적</label>
+
+            <input id="b_content" placeholder="예) 연습, 회의, 공연 준비 등">
+
+            <label>이용 일시</label>
+
+            <input
+                id="b_date"
+                type="datetime-local"
+                min=""
+            >
+
+            <label>사용 시간</label>
+
+            <select id="b_hours">
+                <option value="1">1시간</option>
+                <option value="2">2시간</option>
+            </select>
+
+            <label>예상 인원</label>
+
+            <input id="b_people" type="number" placeholder="예상 참여 인원">
+
+            <!-- 동의문 -->
+            <div
+                style="
+                    margin-top:30px;
+                    padding:20px;
+                    border:2px solid #e5e8eb;
+                    border-radius:16px;
+                    background:#f9fafb;
+                    line-height:1.8;
+                    color:#333;
+                    font-size:16px;
+                "
+            >
+
+                <div
+                    style="
+                        font-weight:bold;
+                        margin-bottom:15px;
+                        font-size:18px;
+                        color:#191f28;
+                    "
+                >
+                    대관 신청 동의문
+                </div>
+
+                <!-- 첫 번째 동의 -->
+                <div
+                    style="
+                        padding:16px;
+                        background:white;
+                        border-radius:12px;
+                        border:1px solid #e5e8eb;
+                        margin-bottom:18px;
+                    "
+                >
+
+                    <div style="margin-bottom:15px;">
+                        남양주시 문화의집 시설을 이용함에 있어 이용수칙과 허가 조건을 준수하고  
+                        대관 기간 동안 안전 및 시설 관리에 유의하며
+                        대관자로서의 책임을 성실히 이행하겠습니다.
+                    </div>
+
+                    <div
+                        style="
+                            display:flex;
+                            align-items:center;
+                            gap:20px;
+                            flex-wrap:wrap;
+                        "
+                    >
+
+                        <label
+                            style="
+                                display:flex;
+                                align-items:center;
+                                gap:6px;
+                                font-size:15px;
+                                font-weight:500;
+                                margin:0;
+                                white-space:nowrap;
+                            "
+                        >
+                            <input
+                                type="radio"
+                                name="agree1"
+                                value="동의"
+                                id="agree1_yes"
+                                style="
+                                    width:18px;
+                                    height:18px;
+                                    margin:0;
+                                "
+                            >
+                            동의
+                        </label>
+
+                        <label
+                            style="
+                                display:flex;
+                                align-items:center;
+                                gap:6px;
+                                font-size:15px;
+                                font-weight:500;
+                                margin:0;
+                                white-space:nowrap;
+                            "
+                        >
+                            <input
+                                type="radio"
+                                name="agree1"
+                                value="비동의"
+                                id="agree1_no"
+                                style="
+                                    width:18px;
+                                    height:18px;
+                                    margin:0;
+                                "
+                            >
+                            비동의
+                        </label>
+
+                    </div>
+
+                </div>
+
+                <!-- 두 번째 동의 -->
+                <div
+                    style="
+                        padding:16px;
+                        background:white;
+                        border-radius:12px;
+                        border:1px solid #e5e8eb;
+                    "
+                >
+
+                    <div style="margin-bottom:15px;">
+
+                        ① 사전 승인되지 않은 물품 및 장비는 반입하지 않으며
+                         이로 인해 발생하는 사항에 대해서는 책임을 지겠습니다.<br><br>
+
+                        ② 대관시설 내에서는 취사 및 음식물 반입을 하지 않겠습니다.<br><br>
+
+                        ③ 정치·종교 활동이나 유료 강습, 특강 등 영리 목적의 시설 사용은 하지 않겠으며
+                          이를 위반할 경우 사용 승인 취소 및 이용 제한 조치에 동의합니다.
+
+                    </div>
+
+                    <div
+                        style="
+                            display:flex;
+                            align-items:center;
+                            gap:20px;
+                            flex-wrap:wrap;
+                        "
+                    >
+
+                        <label
+                            style="
+                                display:flex;
+                                align-items:center;
+                                gap:6px;
+                                font-size:15px;
+                                font-weight:500;
+                                margin:0;
+                                white-space:nowrap;
+                            "
+                        >
+                            <input
+                                type="radio"
+                                name="agree2"
+                                value="동의"
+                                id="agree2_yes"
+                                style="
+                                    width:18px;
+                                    height:18px;
+                                    margin:0;
+                                "
+                            >
+                            동의
+                        </label>
+
+                        <label
+                            style="
+                                display:flex;
+                                align-items:center;
+                                gap:6px;
+                                font-size:15px;
+                                font-weight:500;
+                                margin:0;
+                                white-space:nowrap;
+                            "
+                        >
+                            <input
+                                type="radio"
+                                name="agree2"
+                                value="비동의"
+                                id="agree2_no"
+                                style="
+                                    width:18px;
+                                    height:18px;
+                                    margin:0;
+                                "
+                            >
+                            비동의
+                        </label>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+            <button
+                class="btn primary"
+                id="btn-submit-book"
+                onclick="
+                    if(navigator.vibrate){
+                        navigator.vibrate(30);
+                    }
+
+                    sendPost('submitBooking');
+                "
+                style="margin-top:30px;"
+            >
+                대관 신청하기
+            </button>
+
+        </div>
+
+        <!-- 🔥 공간 시간표 -->
+        <div
+            id="booking-schedule-section"
+            class="hidden"
         >
 
             <div
                 style="
-                    font-weight:bold;
-                    margin-bottom:15px;
-                    font-size:18px;
-                    color:#191f28;
-                "
-            >
-                대관 신청 동의문
-            </div>
-
-            <!-- 첫 번째 동의 -->
-            <div
-                style="
-                    padding:16px;
-                    background:white;
-                    border-radius:12px;
-                    border:1px solid #e5e8eb;
-                    margin-bottom:18px;
+                    display:grid;
+                    grid-template-columns:1fr 1fr;
+                    gap:12px;
+                    margin-top:10px;
+                    margin-bottom:20px;
                 "
             >
 
-                <div style="margin-bottom:15px;">
-                    남양주시 문화의집 시설을 이용함에 있어 이용수칙과 허가 조건을 준수하고  
-                    대관 기간 동안 안전 및 시설 관리에 유의하며
-                    대관자로서의 책임을 성실히 이행하겠습니다.
-                </div>
-
-                <div
-                    style="
-                        display:flex;
-                        align-items:center;
-                        gap:20px;
-                        flex-wrap:wrap;
-                    "
+                <button
+                    class="btn"
+                    onclick="showSchedule('dance')"
+                    style="margin-top:0;"
                 >
+                    댄스실
+                </button>
 
-                    <label
-                        style="
-                            display:flex;
-                            align-items:center;
-                            gap:6px;
-                            font-size:15px;
-                            font-weight:500;
-                            margin:0;
-                            white-space:nowrap;
-                        "
-                    >
-                        <input
-                            type="radio"
-                            name="agree1"
-                            value="동의"
-                            id="agree1_yes"
-                            style="
-                                width:18px;
-                                height:18px;
-                                margin:0;
-                            "
-                        >
-                        동의
-                    </label>
+                <button
+                    class="btn"
+                    onclick="showSchedule('music')"
+                    style="margin-top:0;"
+                >
+                    음악실
+                </button>
 
-                    <label
-                        style="
-                            display:flex;
-                            align-items:center;
-                            gap:6px;
-                            font-size:15px;
-                            font-weight:500;
-                            margin:0;
-                            white-space:nowrap;
-                        "
-                    >
-                        <input
-                            type="radio"
-                            name="agree1"
-                            value="비동의"
-                            id="agree1_no"
-                            style="
-                                width:18px;
-                                height:18px;
-                                margin:0;
-                            "
-                        >
-                        비동의
-                    </label>
+                <button
+                    class="btn"
+                    onclick="showSchedule('club')"
+                    style="margin-top:0;"
+                >
+                    동아리실
+                </button>
 
-                </div>
+                <button
+                    class="btn"
+                    onclick="showSchedule('room')"
+                    style="margin-top:0;"
+                >
+                    어울림방
+                </button>
 
             </div>
 
-            <!-- 두 번째 동의 -->
             <div
                 style="
-                    padding:16px;
-                    background:white;
-                    border-radius:12px;
-                    border:1px solid #e5e8eb;
+                    width:100%;
+                    height:700px;
+                    border:1px solid #ddd;
+                    border-radius:16px;
+                    overflow:hidden;
+                    background:#fff;
                 "
             >
 
-                <div style="margin-bottom:15px;">
-
-                    ① 사전 승인되지 않은 물품 및 장비는 반입하지 않으며
-                     이로 인해 발생하는 사항에 대해서는 책임을 지겠습니다.<br><br>
-
-                    ② 대관시설 내에서는 취사 및 음식물 반입을 하지 않겠습니다.<br><br>
-
-                    ③ 정치·종교 활동이나 유료 강습, 특강 등 영리 목적의 시설 사용은 하지 않겠으며
-                      이를 위반할 경우 사용 승인 취소 및 이용 제한 조치에 동의합니다.
-
-                </div>
-
-                <div
-                    style="
-                        display:flex;
-                        align-items:center;
-                        gap:20px;
-                        flex-wrap:wrap;
-                    "
-                >
-
-                    <label
-                        style="
-                            display:flex;
-                            align-items:center;
-                            gap:6px;
-                            font-size:15px;
-                            font-weight:500;
-                            margin:0;
-                            white-space:nowrap;
-                        "
-                    >
-                        <input
-                            type="radio"
-                            name="agree2"
-                            value="동의"
-                            id="agree2_yes"
-                            style="
-                                width:18px;
-                                height:18px;
-                                margin:0;
-                            "
-                        >
-                        동의
-                    </label>
-
-                    <label
-                        style="
-                            display:flex;
-                            align-items:center;
-                            gap:6px;
-                            font-size:15px;
-                            font-weight:500;
-                            margin:0;
-                            white-space:nowrap;
-                        "
-                    >
-                        <input
-                            type="radio"
-                            name="agree2"
-                            value="비동의"
-                            id="agree2_no"
-                            style="
-                                width:18px;
-                                height:18px;
-                                margin:0;
-                            "
-                        >
-                        비동의
-                    </label>
-
-                </div>
+                <iframe
+                    id="schedule-frame"
+                    src="https://drive.google.com/file/d/1yxM0hEBg6i5G9soy5fTbP0brCFh0smhn/preview"
+                    width="100%"
+                    height="100%"
+                    allow="autoplay"
+                    style="border:none;"
+                ></iframe>
 
             </div>
 
         </div>
 
-        <button
-            class="btn primary"
-            id="btn-submit-book"
-            onclick="
-                if(navigator.vibrate){
-                    navigator.vibrate(30);
-                }
-
-                sendPost('submitBooking');
-            "
-            style="margin-top:30px;"
+        <!-- 🔥 대관 캘린더 -->
+        <div
+            id="booking-calendar-section"
+            class="hidden"
         >
-            대관 신청하기
-        </button>
+
+            <div
+                style="
+                    width:100%;
+                    height:700px;
+                    border:1px solid #ddd;
+                    border-radius:16px;
+                    overflow:hidden;
+                    background:#fff;
+                "
+            >
+
+                <iframe
+                    src="https://calendar.google.com/calendar/embed?src=29f49ca08ab45c6d905555a73977703f275fd464e254ed959725c9046b3a6436%40group.calendar.google.com&ctz=Asia%2FSeoul"
+                    width="100%"
+                    height="100%"
+                    frameborder="0"
+                    scrolling="no"
+                    style="border:0"
+                ></iframe>
+
+            </div>
+
+        </div>
 
         <button class="btn secondary" onclick="location.href='index.html'">
             메인으로
@@ -344,6 +492,73 @@
         }
 
         originalSendPost(mode);
+    }
+
+    // 🔥 추가
+    function showBookingTab(tab) {
+
+        document
+            .getElementById('booking-form-section')
+            .classList.add('hidden');
+
+        document
+            .getElementById('booking-schedule-section')
+            .classList.add('hidden');
+
+        document
+            .getElementById('booking-calendar-section')
+            .classList.add('hidden');
+
+        if(tab === 'form') {
+
+            document
+                .getElementById('booking-form-section')
+                .classList.remove('hidden');
+        }
+
+        if(tab === 'schedule') {
+
+            document
+                .getElementById('booking-schedule-section')
+                .classList.remove('hidden');
+        }
+
+        if(tab === 'calendar') {
+
+            document
+                .getElementById('booking-calendar-section')
+                .classList.remove('hidden');
+        }
+    }
+
+    // 🔥 추가
+    function showSchedule(type) {
+
+        const frame = document.getElementById('schedule-frame');
+
+        if(type === 'dance') {
+
+            frame.src =
+                'https://drive.google.com/file/d/1yxM0hEBg6i5G9soy5fTbP0brCFh0smhn/preview';
+        }
+
+        if(type === 'music') {
+
+            frame.src =
+                'https://drive.google.com/file/d/17WohMHxvv5IfRFfa5emERQDDESQmzdhL/preview';
+        }
+
+        if(type === 'club') {
+
+            frame.src =
+                'https://drive.google.com/file/d/1WvbjAsWunUQHHcNdWPY9G1YciBuzK_lb/preview';
+        }
+
+        if(type === 'room') {
+
+            frame.src =
+                'https://drive.google.com/file/d/1VcEIP3li3udDwCJq2hyliySIT4_Tazp1/preview';
+        }
     }
 
 </script>
