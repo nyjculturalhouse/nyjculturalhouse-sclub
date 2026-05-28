@@ -23,6 +23,8 @@ async function loadStats() {
 
     const box = document.getElementById('admin-content');
 
+    if (!box) return;
+
     box.innerHTML = `
         <p style="text-align:center; padding:20px;">
             데이터 분석 중...
@@ -146,6 +148,8 @@ async function loadAttendanceCheck() {
         box.innerHTML = html;
 
     } catch (e) {
+
+        console.error(e);
 
         box.innerHTML = `
             <p style="text-align:center; color:red;">
