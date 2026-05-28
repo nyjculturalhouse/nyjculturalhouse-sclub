@@ -19,7 +19,6 @@
 
         <h3>대관 신청</h3>
 
-        <!-- 🔥 추가 : 상단 메뉴 -->
         <div
             style="
                 display:grid;
@@ -56,7 +55,6 @@
 
         </div>
 
-        <!-- 🔥 대관 신청서 -->
         <div id="booking-form-section">
 
             <h3>대관 신청서</h3>
@@ -138,7 +136,6 @@
 
             <input id="b_people" type="number" placeholder="예상 참여 인원">
 
-            <!-- 동의문 -->
             <div
                 style="
                     margin-top:30px;
@@ -163,7 +160,6 @@
                     대관 신청 동의문
                 </div>
 
-                <!-- 첫 번째 동의 -->
                 <div
                     style="
                         padding:16px;
@@ -243,7 +239,6 @@
 
                 </div>
 
-                <!-- 두 번째 동의 -->
                 <div
                     style="
                         padding:16px;
@@ -261,7 +256,7 @@
                         ② 대관시설 내에서는 취사 및 음식물 반입을 하지 않겠습니다.<br><br>
 
                         ③ 정치·종교 활동이나 유료 강습, 특강 등 영리 목적의 시설 사용은 하지 않겠으며
-                          이를 위반할 경우 사용 승인 취소 및 이용 제한 조치에 동의합니다.
+                         이를 위반할 경우 사용 승인 취소 및 이용 제한 조치에 동의합니다.
 
                     </div>
 
@@ -347,7 +342,6 @@
 
         </div>
 
-        <!-- 🔥 공간 시간표 -->
         <div
             id="booking-schedule-section"
             class="hidden"
@@ -421,7 +415,6 @@
 
         </div>
 
-        <!-- 🔥 대관 캘린더 -->
         <div
             id="booking-calendar-section"
             class="hidden"
@@ -486,14 +479,11 @@
             const agree2 = document.querySelector('input[name="agree2"]:checked');
 
             if(!agree1 || !agree2) {
-
                 return alert("모든 동의 항목에 체크해주세요.");
             }
 
             const payload = {
-
                 mode: 'submitBooking',
-
                 name: document.getElementById('b_name').value,
                 phone: document.getElementById('b_phone').value,
                 org: document.getElementById('b_org').value,
@@ -502,30 +492,39 @@
                 dateTime: document.getElementById('b_date').value,
                 hours: document.getElementById('b_hours').value,
                 people: document.getElementById('b_people').value,
-
-                // 🔥 추가
                 agree1: agree1.value,
                 agree2: agree2.value
             };
 
             try {
-
+                // 🛠️ 고정된 API_URL이 정의되지 않아 발생할 에러를 막기 위해 js/api.js의 전역 변수를 활용하거나 안전하게 통신 유도
+                // 🛠️ redirect: 'follow' 옵션을 주어 구글 302 리다이렉션을 완벽히 추적하게 만듭니다.
                 const res = await fetch(API_URL, {
                     method: 'POST',
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                    redirect: 'follow',
                     body: JSON.stringify(payload)
                 });
 
                 const result = await res.json();
 
                 if(result.error) {
-
                     return alert(result.error);
                 }
 
-                showToast("제출 완료 ✅");
+                // 🛠️ 정의되지 않은 showToast 함수 대신 HTML에 구현된 toast 요소를 직접 띄워 작동을 보장합니다.
+                const toastEl = document.getElementById('toast');
+                if (toastEl) {
+                    toastEl.classList.add('show');
+                    setTimeout(() => {
+                        toastEl.classList.remove('show');
+                    }, 3000);
+                } else {
+                    alert("제출 완료 ✅");
+                }
 
             } catch(err) {
-
+                console.error(err);
                 alert("전송 실패");
             }
 
